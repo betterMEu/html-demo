@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>俄罗斯方块</title>
+
+    <script type="text/javascript">
+        (function () {
+
+            let updateCanvas = window.requestAnimationFrame;
+            let canvas;
+            let paint;
+
+            let xch = 0;
+            let jsq = 0;
+
+            //方块参数
+            let x;
+            let y;
+            let cubeType;
+            let cubeState;
+            let color = ['lightblue', 'green', 'red', 'darkblue', 'yellow', 'orange', 'purple'];
+
+            let score = 0;
+            let speed = 1;
+
+            let expend = 40;
+
+            let time = 0;
+            let flag = 0;
+
+            //绑定按键-函数
+            let keyCom = {"38": "turn()", "40": "down()", "37": "left()", "39": "right()"};
+
+            //背景
+            let map = new Array2(13, 23, 0);
+            //颜色
+            let colorMap = new Array2(13, 23, 0);
+
+            //形状  16格 = 4*4 定义一个方块以及可变换空间
+            let shapes = [
+                // i
+                [[0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0]],
+                // s
+                [[0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]],
+                // z
+                [[1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]],
+                // j
+                [[0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+                // o
+                [[1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+                // l
+                [[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+                // t
+                [[0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                    [1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]]
+            ];
+
+            onload = function () {
+                init();
+                update();
+            }
+
+            function init() {
+                canvas = document.getElementById("canvas");
+                paint = canvas.getContext("2d");
+                score = 0;
+                clearMap();
+                drawWall();
+                addMusic('del', 'audio/delLine.mp3', false);
+                addMusic('turnState', 'audio/down.mp3', false);
+                addMusic('bg', 'audio/background.mp3', false);
+                addMusic('lose', 'audio/lose.mp3', false);
+                musicPlay('bg');
+                cubeBuilder();
+            }
+
+
+            //边界设定为2  即墙壁
+            function drawWall() {
+                for (let i = 0; i < 12; i++) {
+                    map[i][21] = 2;
+                }
+                for (let j = 0; j < 22; j++) {
+                    map[11][j] = 2;
+                    map[0][j] = 2;
+                }
+            }
+
+            function cubeBuilder() {
+                cubeType = rmInt(7);
+                cubeState = rmInt(4);
+
+                x = expend;
+                y = 0;
+
+                //游戏结束,
+                if (gameOver(x, y) === 1) {
+                    musicPlay('lose');
+                    alert("game over!");
+
+                    //然后就从新开始游戏
+                    clearMap();
+                    drawWall();
+                    score = 0;
+                }
+            }
+
+            //重新开始游戏
+            function clearMap() {
+                for (let i = 0; i < 12; i++) {
+                    for (let j = 0; j < 22; j++) {
+                        map[i][j] = 0;
+                    }
+                }
+            }
+
+            //变形
+            function turn() {
+                let tempCubeState = (cubeState + 1) % 4;
+                if (check(x, y, cubeType, tempCubeState) === 1) {
+                    cubeState = tempCubeState;
+                    musicPlay('turnState');
+                }
+            }
+
+            //左键
+            function left() {
+                if (check(x - expend, y, cubeType, cubeState) === 1) {
+                    x = x - expend;
+                }
+            }
+
+            //右移
+            function right() {
+                if (check(x + expend, y, cubeType, cubeState) === 1) {
+                    x = x + expend;
+                }
+            }
+
+            //加速
+            function down() {
+                if (check(x, y + expend, cubeType, cubeState) === 1) {
+                    y = y + expend;
+                    delLine();
+                }
+
+                if (check(x, y + expend, cubeType, cubeState) === 0) {
+                    cubeFixed(x, y, cubeType, cubeState);
+                    cubeBuilder();
+                    delLine();
+                }
+            }
+
+            //检测操作是否可行 例如：变形会不会和墙壁、固有的方块有碰撞
+            //0-不可行 1-可行
+            function check(x, y, blockType, turnState) {
+                for (let a = 0; a < 4; a++) {
+                    for (let b = 0; b < 4; b++) {
+                        let mapType = map[Math.floor(x / expend) + b + 1][Math.floor(y / expend) + a];
+                        if (shapes[blockType][turnState][a * 4 + b] === 1 && (mapType === 1 || mapType === 2)) {
+                            return 0;
+                        }
+                    }
+                }
+                return 1;
+            }
+
+            //消行
+            function delLine() {
+                let c = 0;
+                for (let b = 0; b < 22; b++) {
+                    for (let a = 0; a < 12; a++) {
+                        if (map[a][b] === 1) {
+                            c = c + 1;
+                            if (c === 10) {
+                                xch = b;
+                                score += 10;
+                                musicPlay('del');
+                            }
+                        }
+                    }
+                    c = 0;
+                }
+            }
+
+            //在生成新方块时判断碰撞，碰撞游戏结束
+            function gameOver(x, y) {
+                if (check(x, y, cubeType, cubeState) === 0) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            //方块逻辑固定
+            function cubeFixed(x, y, blockType, turnState) {
+                let j = 0;
+                for (let a = 0; a < 4; a++) {
+                    for (let b = 0; b < 4; b++) {
+                        if (map[Math.floor(x / expend) + b + 1][Math.floor(y / expend) + a] === 0) {
+                            map[Math.floor(x / expend) + b + 1][Math.floor(y / expend) + a] = shapes[blockType][turnState][j];
+                            colorMap[Math.floor(x / expend) + b + 1][Math.floor(y / expend) + a] = cubeType;
+                        }
+                        j++;
+                    }
+                }
+            }
+
+            function getScore() {
+                return score;
+            }
+
+            function update() {
+                drawMain();
+                time += speed;
+                if (time % 35 === 0) {
+                    cubeFalling();
+                    if (time > 1000) {
+                        time = 0;
+                    }
+                }
+                updateCanvas(update);
+            }
+
+            function drawMain() {
+                if (null != paint) {
+                    paint.clearRect(0, 0, 1000, 850);
+                    paint.strokeStyle = "pink"
+                    Paint(paint);
+                }
+            }
+
+            function cubeFalling() {
+                if (check(x, y + expend, cubeType, cubeState) === 1) {
+                    y = y + expend;
+                    delLine();
+                }
+
+                if (check(x, y + expend, cubeType, cubeState) === 0) {
+                    if (flag === 1) {
+                        cubeFixed(x, y, cubeType, cubeState);
+                        delLine();
+                        cubeBuilder();
+                        flag = 0;
+                    }
+                    flag = 1;
+                }
+            }
+
+            function Paint(paint) {
+                paint.fillStyle = "snow";
+                paint.font = "italic small-caps bold 50px Arial";
+                paint.fillText("分数", 500, 100);
+                paint.fillStyle = "gold";
+                paint.font = "italic small-caps bold 100px Arial";
+                paint.fillText(getScore(), 650, 100);
+
+                paint.fillStyle = "snow";
+                paint.font = "italic small-caps bold 20px Arial";
+                paint.fillText("玩法说明:", 500, 200);
+                paint.fillText("      	← 向左移动", 500, 250);
+                paint.fillText("      	→ 向右移动", 500, 300);
+                paint.fillText("      	↓  加速下落", 500, 350);
+                paint.fillText("      	↑  变幻形状", 500, 400);
+
+                //画当前方块
+                for (let j = 0; j < 16; j++) {
+                    if (shapes[cubeType][cubeState][j] === 1) {
+                        let grd = paint.createRadialGradient((j % 4 + floor(x / expend) + 1) * expend, (floor(j / 4) + floor(y / expend)) * expend, 2, (j % 4 + floor(x / expend) + 1) * expend + 20, (floor(j / 4) + floor(y / expend)) * expend + 20, 40);
+                        grd.addColorStop(0, color[cubeType]);
+                        paint.fillStyle = grd;
+                        paint.fillRect((j % 4 + floor(x / expend) + 1) * expend, (floor(j / 4) + floor(y / expend)) * expend, expend - 1, expend - 1);
+                    }
+                }
+
+                //画固定的方块
+                for (let j = 0; j < 22; j++) {
+                    for (let i = 0; i < 12; i++) {
+                        let grd = paint.createRadialGradient(i * expend + 20, j * expend, 2, i * expend + 20, j * expend + 20, 40);
+
+                        if (map[i][j] === 1) {
+                            //消行动画
+                            if (xch !== 0 && j === xch) {
+                                grd.addColorStop(0, "black");
+                                paint.fillStyle = grd;
+                                paint.fillRect(i * expend, j * expend, expend - 1, expend - 1);
+                                jsq++;
+                                if (jsq > 300) {
+                                    for (let d = xch; d > 0; d--) {
+                                        for (let e = 0; e < 11; e++) {
+                                            map[e][d] = map[e][d - 1];
+                                        }
+                                    }
+                                    xch = 0;
+                                    jsq = 0;
+                                }
+                            } else {
+                                grd.addColorStop(0, color[colorMap[i][j]]);
+                                paint.fillStyle = grd;
+                                paint.fillRect(i * expend, j * expend, expend - 1, expend - 1);
+                            }
+                        }
+                        //墙壁
+                        if (map[i][j] === 2) {
+                            grd.addColorStop(0, "black");
+                            paint.fillStyle = grd;
+                            paint.fillRect(i * expend, j * expend, expend, expend);
+                        }
+                    }
+                }
+            }
+
+            document.onkeydown = function (e) {
+                eval(keyCom[(e ? e : event).keyCode]);
+            };
+
+        })()
+
+        function Array2(a, b, m) {
+            let k = [];
+            k.length = a;
+            for (let i = 0; i < a; i++) {
+                k[i] = [];
+                k[i].length = b;
+            }
+            for (let k2 = 0; k2 < a; k2++) {
+                for (let p = 0; p < b; p++) {
+                    k[k2][p] = m;
+                }
+            }
+            return k;
+        }
+
+        //给定一个数  返回小于等于这个数
+        function rmInt(a) {
+            return Math.floor(Math.random() * a);
+        }
+
+        function floor(a) {
+            return Math.floor(a);
+        }
+
+        function addMusic(name, src, loop) {
+            let music = document.createElement("audio");
+            if (loop) {
+                music.innerHTML = '<audio id="' + name + '"   controls="controls" style="display: none"  loop="loop"  src="' + src + '" type="audio/mpeg"></audio>';
+                document.body.appendChild(music);
+            } else {
+                music.innerHTML = '<audio id="' + name + '"  controls="controls" style="display: none"   src="' + src + '" type="audio/mpeg"></audio>';
+                document.body.appendChild(music);
+            }
+        }
+
+        function musicPlay(name) {
+            let music = document.getElementById(name);
+            if (music != null) {
+                try {
+                    document.getElementById(name).play();
+
+                } catch (err) {
+                    console.log("音乐加载错误");
+                }
+            }
+        }
+
+        //重玩
+        function reload() {
+            window.location.reload();
+        }
+    </script>
+</head>
+
+<body style="text-align: center;overflow-y: hidden">
+<button style="color:green;font-size:30px;position:absolute;left:1000px;top:460px;z-index: 50;width: 100px;height: 50px;border: 0;background-color: gold;border-radius: 20px"
+        onclick="reload()">开始
+</button>
+
+<canvas id="canvas" width="1000" height="920"
+        style="background-color:rgb(100,143,57);border-radius: 50px">
+</canvas>
+</body>
+
+</html>

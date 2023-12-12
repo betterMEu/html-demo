@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pixijs-Gsap 粒子动画</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #1f1f1f;
+        }
+        #app,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="/story1.js"></script>
+<script src="/story2.js"></script>
+<script src="/story3.js"></script>
+<script src="/story4.js"></script>
+<script src="/story5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@7.0.4/dist/pixi.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+
+<script>
+
+    main();
+
+    async function main() {
+        const app = new PIXI.Application({
+            width: window.innerWidth, // 画布的大小
+            height: window.innerHeight, // 画布的大小
+            useContextAlpha: 'notMultiplied',
+            backgroundColor: 0x1f1f1f, // 画布背景色
+            resizeTo: window, // 画布大小跟随屏幕大小
+        });
+
+
+        // 粒子容器
+        const particleContainer = new PIXI.Container();
+        // 把容器到舞台上
+        app.stage.addChild(particleContainer);
+
+        async function loop(particles = []) {
+            for (const item of [story1, story2, story3, story4, story5]) {
+
+                // 即将展示的粒子数量大于上一动画粒子的数量
+                let oldParticles = particles;
+                if (item.count < particles.length) {
+                    oldParticles = particles.slice(0, item.count);
+                    // 不需要的粒子，清除
+                    particles.slice(item.count).forEach((pItem) => {
+                        pItem.graphics.clear();
+                    });
+                }
+
+                // 默认粒子数量不及上一动画的粒子数量，在已有粒子基础上添加新的粒子
+                particles = createParticles(particleContainer, item, oldParticles);
+                resize();
+
+                //setTimeout 是定时任务，搭配 promise 做到暂停的效果
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            loop(particles);
+        }
+        loop();
+
+
+        // 修改容器位置
+        function resize() {
+            particleContainer.x = window.innerWidth / 2 - particleContainer.width / 2;
+            particleContainer.y = window.innerHeight / 2 - particleContainer.width / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+
+        function createParticles(particleContainer, newValue = [], oldParticles) {
+            // 即将展示的动画粒子数组
+            let particles = [];
+
+            for (let index = 0; index < newValue.count; index++) {
+
+                // oldParticles 是上一动画的粒子数量
+                // 若少于即将展示动画的粒子数量，那么 oldParticles[index] 也就是 index 超过了 oldParticles 的索引，布尔结果将为 false
+                const oldPoint = oldParticles[index];
+
+                let graphics;
+                if (oldPoint) {
+                    graphics = oldPoint.graphics;
+                } else {
+                    graphics = getGraphics()
+
+                    // 添加到容器中
+                    particleContainer.addChild(graphics);
+                }
+
+                // 给定随机的粒子初始坐标
+                graphics.x = Math.random() * newValue.size.width;
+                graphics.y = Math.random() * newValue.size.height;
+
+                // 赋值粒子最终最终坐标
+                const point = newValue.points[index];
+
+                // 添加到动画的粒子数组
+                // graphics 包含粒子初始坐标和绘制圆所需的样式， x 和 y 是粒子的目标坐标
+                particles.push({graphics, x: point[0], y: point[1]});
+            }
+
+            // gsap实现动画效果
+            for (let i = 0; i < newValue.count; i++) {
+                const pItem = particles[i];
+                gsap.to(pItem.graphics, {
+                    duration: 7, // 粒子聚合动画时间
+                    x: pItem.x,
+                    y: pItem.y,
+                    ease: 'power4.out'
+                });
+            }
+
+            return particles;
+        }
+
+        // 创建点
+        function getGraphics() {
+            const graphics = new PIXI.Graphics();
+            graphics.beginFill(0xcccccc);
+            graphics.drawCircle(0, 0, 1);
+            graphics.endFill();
+
+            return graphics;
+        }
+
+        document.querySelector('#app').appendChild(app.view);
+    }
+</script>
+</body>
+</html>

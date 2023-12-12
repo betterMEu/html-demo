@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <input type="file" id="inputImage" accept="image/*">
+  <canvas id="outputCanvas"></canvas>
+
+  <script>
+    // 获取上传的文件
+    const fileInput = document.querySelector('input[type="file"]')
+    fileInput.addEventListener('change', handleFileSelect, false)
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0]
+
+      // 创建一个图片对象
+      const img = new Image()
+      img.onload = function() {
+
+        // 创建一个 canvas 元素
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        // 将图片绘制到 canvas 上
+        canvas.width = img.width
+        canvas.height = img.height
+        ctx.drawImage(img, 0, 0)
+
+        // 获取图像数据
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const pixelData = imageData.data   // 一个像素点占据 4 个数组位置，比如第一个像素点占据开头 0（r），1(g)，2(b)，3(a) 四个索引。
+
+          console.log(imageData)
+
+
+        // 计算点阵大小
+        const pixelSize = 1   // 每个像素点的大小（单位为像素）,意思是将像素点放大，降低分辨率
+        const pixelWidth = Math.ceil(canvas.width / pixelSize)
+        const pixelHeight = Math.ceil(canvas.height / pixelSize)
+
+        // 在 canvas 中绘制点阵
+        canvas.width = pixelWidth * pixelSize
+        canvas.height = pixelHeight * pixelSize
+
+        ctx.fillStyle = 'white'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+
+          const point = [[]]
+          // const color = []
+
+        for (let y = 0; y < pixelHeight; y++) {
+          for (let x = 0; x < pixelWidth; x++) {
+            const pixelIndex = (y * pixelSize * canvas.width + x * pixelSize) * 4
+            const r = pixelData[pixelIndex]
+            const g = pixelData[pixelIndex + 1]
+            const b = pixelData[pixelIndex + 2]
+            const a = pixelData[pixelIndex + 3]
+
+              if(r === 255 && g === 255 && b === 255 && a === 255) continue
+              // console.log(r,g,b,a)
+            if (r > 0 && a !== 0) {
+                ctx.fillStyle = `rgba(${r},${g},${b},${a})`
+                ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
+                point.push([x * pixelSize, y * pixelSize])
+                // color.push(rgbToHex(r, g, b))
+            }
+
+          }
+        }
+
+          // console.log(point)
+          console.log(point.length)
+
+          let text = ''
+          point.forEach(item => {
+              text += '['
+              text += item[0]
+              text += ','
+              text += item[1]
+              text += '],'
+          })
+          console.log(text)
+
+          // let colorText = ''
+          // color.forEach(item => {
+          //     colorText += '\"'
+          //     colorText += item
+          //     colorText += '\"'
+          //     colorText += ','
+          // })
+          // console.log(colorText)
+
+
+        // 将 canvas 元素添加到文档中
+        document.body.appendChild(canvas)
+      }
+
+      // 读取上传的图片
+      const reader = new FileReader()
+      reader.onload = function(event) {
+        img.src = event.target.result
+      }
+      reader.readAsDataURL(file)
+    }
+
+    function rgbToHex(r, g, b) {
+        return '0x' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+    }
+
+  </script>
+</body>
+</html>

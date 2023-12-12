@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="cms-Hans-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>画个彩虹</title>
+</head>
+
+<body>
+
+
+<canvas id="canvas" width="700" height="500">
+  当前浏览器不支持canvas
+</canvas>
+
+
+<script>
+  let c = document.getElementById("canvas");
+  let ctx = c.getContext("2d");
+
+  ctx.font="40px Verdana";
+  let gld=ctx.createLinearGradient(0,0,c.width,0);
+  gld.addColorStop(0.1, "red");
+  gld.addColorStop(0.2, "orange");
+  gld.addColorStop(0.3, "yellow");
+  gld.addColorStop(0.4, "green");
+  gld.addColorStop(0.5, "cyan");
+  gld.addColorStop(0.6, "indigo");
+  gld.addColorStop(0.7, "purple");
+  ctx.fillStyle=gld;
+  ctx.fillText("遇见彩虹,吃定彩虹",50,70);
+
+
+  let grd = ctx.createRadialGradient(350, 500, 150, 350, 500, 350);
+  grd.addColorStop(0, "#ffffff");
+  grd.addColorStop(0.3, "#8B00FF");
+  grd.addColorStop(0.4, "#0000FF");
+  grd.addColorStop(0.5, "#00FFFF");
+  grd.addColorStop(0.6, "#00FF00");
+  grd.addColorStop(0.7, "#FFFF00");
+  grd.addColorStop(0.8, "#FF7F00");
+  grd.addColorStop(0.9, "#FF0000");
+  grd.addColorStop(1, "#ffffff");
+
+
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 150, 700, 350)
+</script>
+
+
+</body>
+</html>

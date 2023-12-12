@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单导航</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+
+            /* 背景色-增加与菜单的对比 */
+            background-color: rgb(245, 245, 245);
+            color: #cdcdcd;
+            font-family: "Avenir Next", "Avenir", sans-serif;
+
+            overflow-x: hidden; /* needed because hiding the menu on the right side is not perfect,  */
+        }
+
+        a {
+            text-decoration: none;
+            color: #232323;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: tomato;
+        }
+
+        #menuToggle {
+            display: block;
+            position: fixed;
+            top: 53px;
+            left: 50px;
+            height: 32px;
+
+            -webkit-user-select: none;
+            user-select: none;
+
+            z-index: 1;
+        }
+
+        #menuToggle input {
+            display: block;
+            width: 34px;
+            height: 30px;
+            position: absolute;
+
+            top: -10px;
+            left: -7px;
+
+            cursor: pointer;
+
+            opacity: 0;
+            z-index: 3;
+
+            -webkit-touch-callout: none;
+        }
+
+        #menuToggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            margin-bottom: 5px;
+            position: relative;
+
+            /*菜单颜色*/
+            background: #2f2f2f;
+            border-radius: 3px;
+
+            z-index: 2;
+
+            transform-origin: 4px 0;
+            transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), opacity 0.55s ease;
+        }
+
+        #menuToggle span:nth-child(2) {
+            transform-origin: 0% 0%;
+        }
+
+        #menuToggle span:nth-child(4) {
+            transform-origin: 0% 100%;
+        }
+
+        #menuToggle input:checked ~ span:nth-child(2) {
+            transform: rotate(45deg) translate(-2px, -2px);
+        }
+
+        #menuToggle input:checked ~ span:nth-child(3) {
+            opacity: 0;
+            transform: rotate(0deg) scale(0.2, 0.2);
+        }
+
+        #menuToggle input:checked ~ span:nth-child(4) {
+            transform: rotate(-45deg) translate(-1px, -1px);
+        }
+
+        #menu {
+            position: absolute;
+            width: 220px;
+            height: 100vh;
+            margin: -74px 0 0 -50px;
+            padding: 125px 50px 50px;
+
+            background: #ffffff;
+            list-style-type: none;
+            -webkit-font-smoothing: antialiased;
+
+            transform-origin: 0 0;
+            transform: translate(-100%, 0);
+            transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+
+            z-index: 1;
+        }
+
+        #menuToggle input:checked ~ ul {
+            transform: none;
+        }
+
+        #menu li {
+            padding: 10px 30px;
+            font-size: 22px;
+        }
+
+        .category-mask {
+            position: absolute;
+            width: calc(100vw - 300px);
+            height: 100vh;
+            background-color: rgb(245, 245, 245);
+            margin: -74px 20px 20px 250px;
+
+            transform-origin: 0 0;
+            transform: translate(100%, 0);
+            transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+        }
+
+        #menuToggle input:checked ~ div {
+            transform: none;
+        }
+    </style>
+
+</head>
+<body>
+<nav>
+    <div id="menuToggle">
+        <input class="menuInput" type="checkbox"/>
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <ul id="menu">
+            <li><a href="#" class="nav">主页</a></li>
+            <li><a href="#" class="nav">博客</a></li>
+            <li><a href="#" class="nav">更多</a></li>
+        </ul>
+
+        <div class="category-mask" onclick="onCloseMenu()"></div>
+    </div>
+</nav>
+
+<script>
+    function onCloseMenu() {
+        let input = document.querySelector('.menuInput')
+        if (input.checked) input.checked = false
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="button" value="移动" onclick="move()"/>
+<input type="button" value="旋转" onclick="rotate()"/>
+<input type="button" value="缩放" onclick="scale()"/>
+
+
+<canvas id="canvas" style="border: 1px solid #090909; display: block;" width="800" height="800">
+    当前浏览器不支持canvas
+</canvas>
+
+<script>
+
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.rect(1, 1, 100, 100);
+    ctx.stroke();
+    ctx.save();
+
+    function move() {
+        let c=document.getElementById("canvas");
+        let ctx=c.getContext("2d");
+        ctx.translate(100,100);
+        ctx.rect(0, 0, 100, 100);
+        ctx.stroke();
+    }
+
+    function rotate() {
+        let c=document.getElementById("canvas");
+        let ctx=c.getContext("2d");
+        ctx.rotate(15*Math.PI/180);
+        ctx.rect(0, 0, 100, 100);
+        ctx.stroke();
+    }
+
+    function scale() {
+        let c=document.getElementById("canvas");
+        let ctx=c.getContext("2d");
+        ctx.scale(1.5,1.5);
+        ctx.rect(0, 0, 100, 100);
+        ctx.stroke();
+    }
+
+</script>
+
+</body>
+</html>

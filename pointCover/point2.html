@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class=" no-touch"><head>
+<head><title>Canvas 转点阵</title></head>
+<body>
+
+<input type="file" onchange="previewHandle(this)" />
+<img id="img" />
+<!-- <img src="./dragon.png" id='img' style="display:none;"  /> -->
+<div id="container" style="width:1200px;height:1038px">
+<canvas id="cvs" width="1200" height="1038"></canvas>
+</div>
+<script type="text/javascript">
+    // 判断像素块是否空白or像素覆盖
+    function isCover(imgdata, width, x, y) {
+        var covered = 0;
+        // 像素快为 8*8
+        for (var i=x; i<x+8; i++) {
+            for (var j=y; j<y+8; j++) {
+                var idx = i*4*width + 4*j;
+                // 阈值设为192
+                if (imgdata[idx]<192 || imgdata[idx+1]<192 || imgdata[idx+2]<192 ) {
+                    covered++;
+                }
+                // 覆盖面积超过 45/64
+                if (covered > 45) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    // 填充像素块
+    function drawPoints(imgdata, width, x, y, clear=false) {
+        for (var i=x; i<x+8; i++) {
+            for (var j=y; j<y+8; j++) {
+                var idx = i*4*width + 4*j;
+                if (i >=x+2 && i<x+6 && j>=y+2 && j<y+6 && !clear) {
+                    // 画小方块
+                    imgdata[idx] = 168;
+                    imgdata[idx+1] = 168;
+                    imgdata[idx+2] = 168;
+                    imgdata[idx+3] = 192;
+                } else {
+                    // 置为空白
+                    imgdata[idx] = 255;
+                    imgdata[idx+1] = 255;
+                    imgdata[idx+2] = 255;
+                    imgdata[idx+3] = 0;
+                }
+            }
+        }
+        return imgdata;
+    }
+    // 点阵转换
+    function convertPointArray(img) {
+        for (var i=0; i<img.height; i=i+8) {
+            for (var j=0; j<img.width; j=j+8) {
+                var isCovered = isCover(img.data, img.width, i, j);
+                if (isCovered) {
+                    img.data = drawPoints(img.data, img.width, i, j);
+                } else {
+                    // 其他区域直接清空
+                    img.data = drawPoints(img.data, img.width, i, j, true);
+                }
+            }
+        }
+        return img;
+    }
+    function _init() {
+        var cvs = document.getElementById('cvs'),
+            ctx = cvs.getContext('2d'),
+            img = new Image();
+        img = document.getElementById('img');
+        img.crossOrigin = "anonymous";
+        img.onload = function() {
+            // 把图片放到canvas 画布上
+            ctx.drawImage(img, 0, 0, cvs.width, cvs.height);
+            // 获取像素数据
+            var imageData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+            // 转换
+            imageData = convertPointArray(imageData);
+            // 擦除原来的图片
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            // 重新绘图
+            ctx.putImageData(imageData, 0, 0);
+        }
+    }
+
+    function previewHandle(fileDOM) {
+        var file = fileDOM.files[0], // 获取文件
+            imageType = /^image\//,
+            reader = '';
+    
+        // 文件是否为图片
+        if (!imageType.test(file.type)) {
+            alert("请选择图片！");
+            return;
+        }
+        // 判断是否支持FileReader    
+        if (window.FileReader) {
+            reader = new FileReader();
+        }
+        // IE9及以下不支持FileReader
+        else {
+            alert("您的浏览器不支持图片预览功能，如需该功能请升级您的浏览器！");
+            return;
+        }
+        // 读取完成    
+        reader.onload = function (event) {
+            // 获取图片DOM
+            var img = document.getElementById("img");
+            // 图片路径设置为读取的图片    
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    _init();
+</script>
+</body>
+</html>

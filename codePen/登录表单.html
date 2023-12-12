@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: black;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .inputBox {
+            position: relative;
+            width: 250px;
+        }
+
+        .inputBox input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #a1a1a1;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1em;
+            transition: 0.5s
+        }
+
+        .inputBox span {
+            position: absolute;
+            left: 0;
+            padding: 15px 15px 15px 20px;
+            pointer-events: none;
+            font-size: 1em;
+            transition: 0.5s ease;
+            text-transform: uppercase;
+        }
+
+        .inputBox input:focus {
+            border-color: green;
+        }
+
+        .inputBox input:valid ~ span,
+        .inputBox input:focus ~ span {
+            transform: translateX(5px) translateY(-10px);
+            padding: 0 10px;
+            background-color: white;
+        }
+
+        .inputBox input:focus ~ span {
+            color: green;
+        }
+
+    </style>
+</head>
+<body>
+<div class="inputBox">
+    <input type="text" required>
+    <span>用户名</span>
+</div>
+<div class="inputBox">
+    <input type="text" required>
+    <span>密码</span>
+</div>
+</body>
+</html>

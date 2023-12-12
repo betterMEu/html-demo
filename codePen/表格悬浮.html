@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        :root {
+            --hover: transparent;
+            --row-hover: transparent;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: Avenir, Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif;
+            font-weight: normal;
+        }
+
+        body {
+            display: grid;
+            place-content: center;
+        }
+
+        td,
+        th {
+            text-align: right;
+            padding: 0.5em 1em;
+            transition: background-color 100ms ease;
+        }
+
+        th {
+            white-space: normal;
+            vertical-align: bottom;
+            max-width: 90px;
+            word-wrap: break-word;
+        }
+
+        body:has([name="rowHover"]:checked) tbody tr:hover {
+            --hover: hsla(240, 95%, 80%, 1);
+            --row-hover: hsla(50, 95%, 60%, 1);
+        }
+
+        body:has([name="columnHover"]:checked) {
+            --hover: hsla(50, 95%, 60%, 1);
+        }
+
+
+
+        tr:hover {
+            background: var(--row-hover);
+        }
+
+        table:has(td:nth-child(1):hover, th:nth-child(1):hover) {
+            & th:nth-child(1),
+            & tbody td:nth-child(1) {
+                background: var(--hover);
+            }
+        }
+
+        table:has(td:nth-child(2):hover, th:nth-child(2):hover) {
+            & th:nth-child(2),
+            & tbody td:nth-child(2) {
+                background: var(--hover);
+            }
+        }
+
+        table:has(td:nth-child(3):hover, th:nth-child(3):hover) {
+            & th:nth-child(3),
+            & tbody td:nth-child(3) {
+                background: var(--hover);
+            }
+        }
+
+        table:has(td:nth-child(4):hover, th:nth-child(4):hover) {
+            & th:nth-child(4),
+            & tbody td:nth-child(4) {
+                background: var(--hover);
+            }
+        }
+
+        table:has(td:nth-child(5):hover, th:nth-child(5):hover) {
+            & th:nth-child(5),
+            & tbody td:nth-child(5) {
+                background: var(--hover);
+            }
+        }
+
+        table:has(td:nth-child(6):hover, th:nth-child(6):hover) {
+            & th:nth-child(6),
+            & tbody td:nth-child(6) {
+                background: var(--hover);
+            }
+        }
+
+        .settings {
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            text-align: center;
+            font-size: 100%;
+            background: #eee;
+            padding-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+<div class="settings">
+    <h1>Modern CSS only column hover</h1>
+    <label>行悬浮效果: <input type="checkbox" name="rowHover"/></label>
+    <label>列悬浮效果: <input type="checkbox" name="columnHover" checked/></label>
+</div>
+<div>
+    <table class="columnHover">
+        <thead>
+        <tr>
+            <th>Number of training data</th>
+            <th>Number of training parameters</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>123</td>
+            <td>456</td>
+            <td>789</td>
+            <td>1011</td>
+            <td>1213</td>
+            <td>1415</td>
+        </tr>
+        <tr>
+            <td>234</td>
+            <td>567</td>
+            <td>890</td>
+            <td>1112</td>
+            <td>1314</td>
+            <td>1516</td>
+        </tr>
+        <tr>
+            <td>345</td>
+            <td>678</td>
+            <td>901</td>
+            <td>1213</td>
+            <td>1415</td>
+            <td>1617</td>
+        </tr>
+        <tr>
+            <td>1001</td>
+            <td>1112</td>
+            <td>1213</td>
+            <td>1314</td>
+            <td>1415</td>
+            <td>1516</td>
+        </tr>
+        <tr>
+            <td>1002</td>
+            <td>1113</td>
+            <td>1214</td>
+            <td>1315</td>
+            <td>1416</td>
+            <td>1517</td>
+        </tr>
+        <tr>
+            <td>1003</td>
+            <td>1114</td>
+            <td>1215</td>
+            <td>1316</td>
+            <td>1417</td>
+            <td>1518</td>
+        </tr>
+        <tr>
+            <td>1004</td>
+            <td>1115</td>
+            <td>1216</td>
+            <td>1317</td>
+            <td>1418</td>
+            <td>1519</td>
+        </tr>
+        <tr>
+            <td>1005</td>
+            <td>1116</td>
+            <td>1217</td>
+            <td>1318</td>
+            <td>1419</td>
+            <td>1520</td>
+        </tr>
+        <tfoot>
+        <tr>
+            <td colspan="6"><small>These dummy data generated using Google Bard</small></td>
+        </tr>
+        </tfoot>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画图</title>
+</head>
+
+<style>
+    div{display:inline-block;}
+</style>
+
+<body>
+    <div>
+        <canvas id="canvas" width="500" height="500" style="border: 1px solid #000000;"></canvas>
+    </div>
+
+    <div id="top" style="position:absolute;width: 250px;height: 500px;padding-left: 10px">
+        <input type="button" style="background-color:red; width: 50px; height: 30px" onclick="pen_click(0)">
+        <input type="button" style="background-color:orange; width: 50px; height: 30px" onclick="pen_click(1)">
+        <input type="button" style="background-color:yellow; width: 50px; height: 30px" onclick="pen_click(2)">
+        <input type="button" style="background-color:green; width: 50px; height: 30px" onclick="pen_click(3)">
+        <input type="button" style="background-color:cyan; width: 50px; height: 30px" onclick="pen_click(4)">
+        <input type="button" style="background-color:indigo; width: 50px; height: 30px" onclick="pen_click(5)">
+        <input type="button" style="background-color:purple; width: 50px; height: 30px" onclick="pen_click(6)">
+        <input type="button" style="background-color:black; width: 50px; height: 30px" onclick="pen_click(7)">
+
+        <div style="margin-top: 20px">
+            <img src="image/yuan.png" width="4px" height="4px" onclick="line_wid(1)" alt="">
+            <img src="image/yuan.png" width="8px" height="8px" onclick="line_wid(2)" alt="">
+            <img src="image/yuan.png" width="12px" height="12px" onclick="line_wid(4)" alt="">
+            <img src="image/yuan.png" width="16px" height="16px" onclick="line_wid(6)" alt="">
+            <img src="image/yuan.png" width="20px" height="20px" onclick="line_wid(8)" alt="">
+
+        </div>
+
+        <br>
+
+        <div style="margin-top: 20px">
+            <img src="image/bi.png" width="40px" height="40px" alt="画笔" onclick="swapStatus(0)">
+            <img src="image/xiangpi.png" width="30px" height="30px" alt="画笔" onclick="swapStatus(1)">
+        </div>
+
+        <br>
+
+        <div style="margin-top: 20px">
+            <input type="button" value="保存图片" onclick="save_pic()">
+            <input type="button" value="清除画布" onclick="clear_pic()">
+        </div>
+
+        <div style="margin-top: 20px">
+            <textarea id="out" style="width: 200px;height: 220px"></textarea>
+            <input type="button" value="发送" onclick="send()">
+            <input id="in" type="text" placeholder="输入内容" style="width: 150px">
+        </div>
+
+    </div>
+
+<script>
+    //坐标
+    let X,Y,X1,Y1;
+
+    //颜色
+    let color = ["red","orange","yellow","green","cyan","indigo","purple","black"];
+
+    //橡皮大小
+    let eraserSize;
+
+    let c;
+    let ctx;
+    let isMouseDown = false;
+
+    //0-笔，1-橡皮擦
+    let status = 0;
+
+    window.onload=function(){
+        c = document.getElementById("canvas");
+        ctx = c.getContext("2d");
+
+        c.onmousedown=mouseDownAction;
+        c.onmousemove=mouseMoveAction;
+        document.onmouseup=mouseUpAction;
+    }
+
+    function pen_click(num){
+        ctx.strokeStyle = color[num];
+    }
+
+    function line_wid(index){
+        ctx.lineWidth = index;
+        eraserSize = index;
+    }
+
+    function mouseDownAction(e){
+        isMouseDown=true;
+        X= e.offsetX;
+        Y= e.offsetY;
+    }
+
+    function mouseMoveAction(e){
+        if(isMouseDown){
+            X1= e.offsetX;
+            Y1= e.offsetY;
+            if(status === 0) {
+                drawLine(X,Y,X1,Y1);
+            }else if(status === 1) {
+                clean(X,Y);
+            }
+        }
+    }
+
+    function mouseUpAction(){
+        isMouseDown=false;
+    }
+
+    function drawLine(x1,y1,x2,y2){
+        if(isMouseDown)
+            ctx.beginPath();
+
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+
+        if(isMouseDown){
+            X=X1;
+            Y=Y1;
+        }
+    }
+
+    function clean(x1,y1){
+        ctx.clearRect(x1,y1,eraserSize,eraserSize);
+        if(isMouseDown){
+            X=X1;
+            Y=Y1;
+        }
+    }
+
+    function save_pic(){
+        const el = document.createElement('a');
+        el.href = c.toDataURL();
+        el.download = '图片';
+        const event = new MouseEvent('click');
+        el.dispatchEvent(event);
+    }
+
+    function clear_pic(){
+        ctx.clearRect(0,0,500,500);
+    }
+
+    function swapStatus(num) {
+        status = num;
+    }
+
+    function send() {
+        let textInputBox = document.getElementById("in");
+        let textBox = document.getElementById("out");
+        if(textBox.value === "") {
+            textBox.value = textInputBox.value;
+        } else {
+            textBox.value = textBox.value + "\r"+ textInputBox.value;
+        }
+        textInputBox.value = "";
+        console.log(textInputBox.value)
+    }
+
+</script>
+</body>
+
+</html>
