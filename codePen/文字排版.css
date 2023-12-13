@@ -1,0 +1,354 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300);
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: 'Hiragino Kaku Gothic ProN', YuGothic, '游ゴシック', 'Meiryo', Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+}
+
+h1 {
+    margin: 60px 0 30px;
+    font-size: 40px;
+    line-height: 1.2;
+}
+
+h1, h1 + p {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    text-align: center;
+}
+
+h1 + p a {
+    color: #333;
+}
+
+/* 作用是在鼠标悬停在<h1>元素后的<p>元素中的<a>元素上时，移除其下划线 */
+h1 + p a:hover {
+    text-decoration: none;
+}
+
+section {
+    width: 800px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    border-top: 1px dashed #ddd;
+}
+
+section h2 {
+    margin-bottom: 40px;
+    font-size: 24px;
+}
+
+section h3 {
+    margin: 20px 0 10px;
+}
+
+.cf:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.left-area {
+    float: left;
+    width: 47%;
+}
+
+.right-area {
+    float: right;
+    width: 47%;
+}
+
+@media screen and (max-width: 800px) {
+    section {
+        width: auto;
+        padding: 80px 20px;
+    }
+
+    .left-area, .right-area {
+        float: none;
+        width: auto;
+    }
+
+    .right-area {
+        margin-top: 40px;
+    }
+}
+
+#section01 {
+    border-top: none;
+}
+
+#section01 p + p {
+    margin-top: 20px;
+}
+
+#section01 .example p {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+#section02 .example::selection {
+    background: #000;
+    color: #fff;
+}
+
+#section02 .example::-moz-selection {
+    background: #000;
+    color: #fff;
+}
+
+
+#section03 .example {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+
+#section04 .cf {
+    margin-top: 40px;
+}
+
+#section04 h3 span {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+#section04 .example01 p {
+    letter-spacing: .5em;
+}
+
+#section04 .example02 p span,
+#section04 .example03 p span {
+    font-weight: bold;
+    letter-spacing: 1em;
+}
+
+#section04 .example03 p span {
+    margin-right: -1em;
+}
+
+
+#section05 p {
+    text-indent: 2em;
+}
+
+
+#section06 p {
+    margin-left: 1em;
+    text-indent: 2em;
+}
+
+
+#section07 .example01 p:first-letter {
+    font-size: 42px;
+    line-height: 1;
+}
+
+#section07 .example02 p:first-letter {
+    float: left;
+    margin-right: .2em;
+    padding: .2em;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 36px;
+    line-height: 1;
+}
+
+
+#section08 p:first-line {
+    color: #3498db;
+    font-weight: bold;
+}
+
+
+#section09 table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+#section09 table th,
+#section09 table td {
+    padding: .5em;
+    border: 1px solid #ddd;
+    text-align: left;
+    vertical-align: top;
+}
+
+#section09 table th {
+    background-color: #eee;
+}
+
+#section09 table td {
+    font-size: 12px;
+}
+
+#section09 .example table th {
+    white-space: nowrap;
+}
+
+
+#section10 p {
+    padding: 1em;
+    background-color: #eee;
+}
+
+#section10 .example p {
+    word-wrap: break-word;
+}
+
+
+#section11 p {
+    border: 1px dashed #ddd;
+    font-size: 14px;
+}
+
+#section11 .example p {
+    text-align: justify;
+    text-justify: inter-ideograph;
+}
+
+
+#section12 p {
+    padding: 1em;
+    background-color: #eee;
+}
+
+#section12 .example p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+#section13 .example01 p {
+    -webkit-transform: scaleX(.8);
+    transform: scaleX(.8);
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+}
+
+#section13 .example02 p {
+    -webkit-transform: scaleY(.8);
+    transform: scaleY(.8);
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+}
+
+
+#section14 p {
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: .2em;
+}
+
+#section14 .example01 p {
+    -webkit-text-fill-color: #fff;
+    -webkit-text-stroke: 1px #000;
+}
+
+#section14 .example02 p {
+    color: #fff;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#section14 .example03 p {
+    color: #fff;
+    text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+
+#section15 p {
+    color: transparent;
+    text-shadow: 0 0 5px rgba(0, 0, 0, .5);
+}
+
+#section15 .example02 p {
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+#section15 .example02 p:hover {
+    color: #000;
+    text-shadow: none;
+}
+
+
+#section16 p {
+    background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+
+#section17 .example strong {
+    background: linear-gradient(transparent 60%, rgba(52, 152, 219, .5) 60%);
+}
+
+
+#section18 .cf {
+    margin-top: 40px;
+}
+
+#section18 .example01 p {
+    text-transform: uppercase;
+}
+
+#section18 .example02 p {
+    text-transform: lowercase;
+}
+
+#section18 .example03 p {
+    text-transform: capitalize;
+}
+
+#section18 .example04 p {
+    font-variant: small-caps;
+}
+
+
+#section19 p {
+    font-size: 14px;
+}
+
+#section19 .example p {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-gap: 20px;
+    -moz-column-gap: 20px;
+    column-gap: 20px;
+}
+
+
+#section20 p {
+    font-family: 'Hiragino Mincho ProN', YuMincho, '游明朝', 'HG明朝E', serif;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#section20 .example span:nth-of-type(1) {
+    position: relative;
+    top: 4px;
+    left: 8px;
+    margin-left: -.6em;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+}
+
+#section20 .example span:nth-of-type(2) {
+    letter-spacing: -0.6em;
+}

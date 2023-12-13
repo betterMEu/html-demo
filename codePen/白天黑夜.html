@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>白天黑夜</title>
 
     <style>
         * {
@@ -237,13 +237,7 @@
             transform: translateX(1em);
         }
 
-        .switch__label {
-            overflow: hidden;
-            position: absolute;
-            width: 1px;
-            height: 1px;
-        }
-
+		/* 切换后改变颜色 */
         body:has(.switch__input:checked) {
             --hue: 223;
             --bg: hsl(var(--hue), 10%, 30%);
@@ -302,7 +296,6 @@
 			<span class="switch__icon-part switch__icon-part--1b"></span>
 		</span>
 	</span>
-    <span class="switch__label">Dark Mode</span>
 </label>
 
 </body>
