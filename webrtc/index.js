@@ -61,7 +61,7 @@ function onMessage(msg) {
         case 'message':
             console.log(data.content)
             break
-        case 'connect':
+        case 'meta':
             dealMessage(msg.content)
 
     }
@@ -144,39 +144,39 @@ function createPeerConnection(id) {
     return peer
 }
 
-function call(userId) {
+function call(targetUserId) {
 
-    const peer = createPeerConnection(userId)
+    const peer = createPeerConnection(targetUserId)
 
     // offer 是用于描述音视频流和网络传输信息
     peer.createOffer()
         .then(offer => peer.setLocalDescription(offer))  // 加入本地描述
-        .then(() => sendMsg("meta", JSON.stringify(peer.localDescription), userId)) // 向对方发送 offer
+        .then(() => sendMsg("meta", JSON.stringify(peer.localDescription), targetUserId)) // 向对方发送 offer
         .catch(e => console.log("Create Offer Error", e))
 }
 
-function dealMessage(message, id) {
+function dealMessage(message, targetUserId) {
     let msg = JSON.parse(message)
     console.log(msg)
 
     switch (msg.type) {
         case 'offer':
-            // 新人收到 offer， 并响应 answer
-            const peer = createPeerConnection(id)
+            // 收到连接请求
+            const peer = createPeerConnection(targetUserId)
 
             peer.setRemoteDescription(msg).then(r => console.log('r', r))
             peer.createAnswer()
                 .then(answer => peer.setLocalDescription(answer))
-                .then(() => sendMsg("meta", JSON.stringify(peer.localDescription), id))
+                .then(() => sendMsg("meta", JSON.stringify(peer.localDescription), targetUserId))
                 .catch(e => console.log("createAnswerError", e))
             break;
 
         case 'answer':
-            connects.get(id).setRemoteDescription(msg)
+            connects.get(targetUserId).setRemoteDescription(msg)
             break;
 
         default:
-            connects.get(id).addIceCandidate(msg)
+            connects.get(targetUserId).addIceCandidate(msg)
     }
 }
 
