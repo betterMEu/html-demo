@@ -119,7 +119,7 @@
             font-size: 22px;
         }
 
-        .category-mask {
+        .menu-mask {
             position: absolute;
             width: calc(100vw - 300px);
             height: 100vh;
@@ -146,18 +146,22 @@
         <span></span>
 
         <ul id="menu">
-            <li><a href="#" class="nav">主页</a></li>
+            <li><a href="#" class="nav">抽卡</a></li>
             <li><a href="#" class="nav">博客</a></li>
             <li><a href="#" class="nav">更多</a></li>
         </ul>
 
-        <div class="category-mask" onclick="onCloseMenu()"></div>
+        <div class="menu-mask" onclick="onCloseMenu()"></div>
     </div>
 </nav>
 
 <script>
+    const input = document.querySelector('.menuInput')
+
+    /**
+     * 菜单打开时，菜单黑色蒙板展开，点击蒙版可关闭菜单
+     */
     function onCloseMenu() {
-        let input = document.querySelector('.menuInput')
         if (input.checked) input.checked = false
     }
 </script>

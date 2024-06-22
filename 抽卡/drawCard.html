@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抽卡</title>
+
+    <style>
+        .draw-card-btn-set {
+            position: absolute;
+            right: 50px;
+            bottom: 50px;
+        }
+
+        .cf:after {
+            content: '';
+            clear: both;
+            display: block;
+        }
+
+        .draw-card-btn {
+            object-fit: contain;
+            width: 270px;
+        }
+
+        .draw-card-btn.left {
+            margin-right: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="cf draw-card-btn-set">
+    <img src="assets/img/one.png" alt="" class="draw-card-btn left" onclick="one()">
+    <img src="assets/img/ten.png" alt="" class="draw-card-btn" onclick="ten()">
+</div>
+
+<script>
+
+    /**
+     * 卡池，使用大数组设定每张卡的概率，如钟离概率为0.001（千分之一），那么在长度为1000的数组中只有一个钟离卡
+     * @type {number[]}
+     */
+    const cardPool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    function one() {
+        console.log(shuffle(cardPool)[0])
+    }
+
+    function ten() {
+        console.log(shuffle(cardPool))
+    }
+
+    /**
+     * 倒计时  eg: countdown(5, () => window.close(), time => console.log('倒计时: ' + time + ' 秒'))
+     * @param time 秒数
+     * @param endCallback 到点执行函数
+     * @param stepCallback 未到点执行函数
+     */
+    function countdown(time, endCallback, stepCallback) {
+        if (time === 0) {
+            endCallback()
+        } else {
+            stepCallback(time)
+            time--
+            setTimeout(() => countdown(time, endCallback, stepCallback), 1000)
+        }
+    }
+
+    // countdown(5, () => window.close(), time => console.log('倒计时: ' + time + ' 秒'))
+
+    /**
+     * 打乱数组
+     * @param array
+     * @returns {*}
+     */
+    function shuffle(array) {
+        let curIndex = array.length, randomIndex
+
+        while (curIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * curIndex)
+            curIndex--
+            [array[curIndex], array[randomIndex]] = [array[randomIndex], array[curIndex]]
+        }
+
+        return array
+    }
+</script>
+
+</body>
+</html>
