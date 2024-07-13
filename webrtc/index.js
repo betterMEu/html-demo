@@ -35,7 +35,7 @@ function startWebSocket() {
     }
 
     // let url = `wss://域名/web/1/${uid}`
-    let url = `ws://localhost:8080/socket`
+    let url = `ws://192.168.31.151:8080/socket`
     socket = new WebSocket(url)
     socket.onopen = onOpen
     socket.onclose = onClose
