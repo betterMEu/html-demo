@@ -4,10 +4,16 @@ const lowerize = obj => Object.keys(obj).reduce((acc, k) => {
 }, {});
 
 
-function lowercaseKeys(object) {
+function lowercaseKeys(obj) {
     return Object.fromEntries(
-        Object.entries(object).map(([key, value]) => [key.toLowerCase(), value])
+        Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v])
     );
+}
+
+lowerCaseObjectKeys = (arr) => {
+    return arr.map(obj => {
+        return lowercaseKeys(obj)
+    });
 }
 
 Object.keys(obj).forEach(key => {

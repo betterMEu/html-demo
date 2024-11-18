@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+  <style>
+    body {
+      min-height: 200vh;
+    }
+
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      width: 0%;
+      height: 4px;
+      background: #7983ff;
+      z-index: 10000;
+    }
+
+    p {
+      position: fixed;
+      top: 20vh;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Unrelated styles */
+    :root {
+      font-size: 18px;
+    }
+
+    body {
+      height: 80vh;
+      line-height: 1.5;
+      font-family: sans-serif;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page-content {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+
+    h2 small {
+      opacity: 0.7;
+      font-weight: normal;
+    }
+  </style>
+
+
+<body>
+
+<div id="scroll-progress"></div>
+<p>Scroll down</p>
+
+<script>
+  const scrollProgress = document.getElementById('scroll-progress');
+  const height =
+          document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+  window.addEventListener('scroll', () => {
+    const scrollTop =
+            document.body.scrollTop || document.documentElement.scrollTop;
+    scrollProgress.style.width = `${(scrollTop / height) * 100}%`;
+  });
+</script>
+</body>
+</html>

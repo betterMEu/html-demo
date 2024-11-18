@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        input:invalid {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+
+        @keyframes shake {
+            0% {margin-left: 0;}
+            25% {margin-left: 0.1rem;}
+            50% {margin-left: -0.1rem;}
+            100% {margin-left: 0;}
+        }
+
+    </style>
+</head>
+<body>
+
+<input type="text" placeholder="输入字母" pattern="[a-zA-Z]*">
+</body>
+
+
+</html>
