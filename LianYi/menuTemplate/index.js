@@ -100,6 +100,7 @@ class Index extends React.Component {
             })
     }
 
+    // 适配modal
     add = () => {
         this.reverseLoadingStatus('confirmLoading')
         this.addOrUpdateRef.validateFields((err, formData) => {
@@ -129,6 +130,7 @@ class Index extends React.Component {
         })
     }
 
+    // 适配NHFra
     addOrUpdate = stopLoading => {
         this.addOrUpdateRef.validateFields((err, formData) => {
             if (err) {
