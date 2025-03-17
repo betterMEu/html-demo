@@ -8,7 +8,7 @@ import LeaveList from "./leaveList/leaveList"
 
 const pageBaseUrl = `${window.baseUrl}/mentorManagement`
 const moduleName = `导师名单`
-const pageCommonAuthPrefix = 'ly-sm-xgdw_mentorManagement'
+// const pageCommonAuthPrefix = 'ly-sm-xgdw_mentorManagement'
 
 class Index extends React.Component {
 
@@ -91,7 +91,7 @@ class Index extends React.Component {
     }
 
     deleteBatch = pkidList => {
-        NHFetch(`${pageBaseUrl}/multiDelete`, 'POST', pkidList)
+        NHFetch(`${pageBaseUrl}/deleteBatch`, 'POST', pkidList)
             .then(res => {
                 if (res && res.code === 200) {
                     message.success('删除成功！')
@@ -150,7 +150,7 @@ class Index extends React.Component {
                 .then(res => {
                     if (res && res.code === 200) {
                         message.success(msg)
-                        this.backOriginAndRefreshTable()
+                        this.backOriginAndRefresh()
                     }
                     stopLoading && stopLoading()
                 })
@@ -176,10 +176,110 @@ class Index extends React.Component {
 
         const columns = [
             {title: '序号', dataIndex: 'ROW_ID', width: '50px'},
-            {title: '姓名', dataIndex: 'XM', width: '120px', searchType: 'input'},
-            {title: '教工号', dataIndex: 'GH', width: '120px', searchType: 'input'},
-            {title: '上任时间', dataIndex: 'RZKSSJMC', width: '120px'}
-        ]
+            {
+                title: "姓名",
+                dataIndex: "XM",
+                searchType: "input"
+            },
+            {
+                title: "学号",
+                dataIndex: "XH",
+                searchType: "input",
+                width: '80px'
+            },
+            {
+                title: "性别",
+                dataIndex: "XB",
+                searchType: "select",
+                sign: 'DMK_XTGL_XBM',
+            },
+            {
+                title: "学生类别",
+                dataIndex: "XSLB",
+                sign: 'DMK_XTGL_XSLBM',
+                searchType: "select"
+            },
+            {
+                title: "学院",
+                dataIndex: "BMMC",
+                sign: 'zhxg_xsxx_bmxx_select',
+                searchType: "select",
+                width: '80px'
+            },
+            {
+                title: "专业",
+                dataIndex: "ZYMC",
+                sign: 'zhxg_xsxx_zyxx_select',
+                searchType: "select",
+                parentField: "BMMC",
+                width: '80px'
+            },
+            {
+                title: "年级",
+                dataIndex: "NJ",
+                sign: 'zhxg_nj',
+                searchType: "select"
+            },
+            {
+                title: "班级",
+                dataIndex: "BJMC",
+                sign: 'zhxg_xsxx_bjxx_select',
+                searchType: "select",
+                parentField: "ZYMC"
+            },
+            {
+                title: "挂科门数",
+                dataIndex: "GKMS",
+                align: "center",
+                render: text => {
+                    let style = text >= 3 ?
+                        {backgroundColor: 'red', color: 'white'}
+                        : {}
+                    return <div style={style}>{text}</div>
+                }
+            },
+            {
+                title: "挂科科目",
+                dataIndex: "GKKM",
+                width: '200px',
+                render: (text, record) => {
+                    const replacedText = text.replaceAll(' ', '\n');
+                    return <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                        {replacedText}
+                    </div>;
+                }
+            },
+            {
+                title: "是否已完成家校联系",
+                dataIndex: "JXLX",
+                width: '100px',
+                align: 'center',
+                excel: false,
+                render: (text, record) => this.handleSwitch(text, record, 'jxlx')
+            },
+            {
+                title: "是否已完成家校联系",
+                dataIndex: "JXLXMC",
+                searchType: "select",
+                hidden: true,
+                sign: 'zhxg_sfm'
+            },
+            {
+                title: "是否采取学业帮扶措施",
+                dataIndex: "XYBFCS",
+                width: '100px',
+                align: 'center',
+                excel: false,
+                render: (text, record) => this.handleSwitch(text, record, 'xybfcs')
+            },
+            {
+                title: "是否采取学业帮扶措施",
+                dataIndex: "XYBFCSMC",
+                searchType: "select",
+                hidden: true,
+                sign: 'zhxg_sfm'
+            },
+        ];
 
         const action = [
             {
@@ -190,7 +290,7 @@ class Index extends React.Component {
                 isShow: record => {
                     return true
                 },
-                auth: `${pageCommonAuthPrefix}_update`
+                // auth: `${pageCommonAuthPrefix}_update`
             },
             {
                 title: '删除',
@@ -200,7 +300,7 @@ class Index extends React.Component {
                 isShow: record => {
                     return true
                 },
-                auth: `${pageCommonAuthPrefix}_delete`
+                // auth: `${pageCommonAuthPrefix}_delete`
             }
         ]
 
@@ -216,23 +316,23 @@ class Index extends React.Component {
                         actionLength={3} // 针对操作列，超过3项时，其他项都会显示在“更多”
                     >
                         {
-                            hasAuth(`${pageCommonAuthPrefix}_insert`) &&
+                            // hasAuth(`${pageCommonAuthPrefix}_insert`) &&
                             <Button type='primary' style={{marginRight: 10}} onClick={e => this.setCurrentModal('addOrUpdateModal')}>新增</Button>
                         }
                         {
-                            hasAuth(`${pageCommonAuthPrefix}_import`) &&
+                            // hasAuth(`${pageCommonAuthPrefix}_import`) &&
                             <Button type='default' style={{marginRight: 10}} onClick={e => this.importExcel.show()}>导入</Button>
                         }
                         {
-                            hasAuth(`${pageCommonAuthPrefix}_export`) &&
+                            // hasAuth(`${pageCommonAuthPrefix}_export`) &&
                             <Button type='default' style={{marginRight: 10}} onClick={e => this.nhTable.exportExcel(moduleName)}>导出</Button>
                         }
                         {
-                            hasAuth(`${pageCommonAuthPrefix}_delete`) &&
+                            // hasAuth(`${pageCommonAuthPrefix}_delete`) &&
                             <Button type='danger' style={{marginRight: 10}} onClick={e => this.handleBatchResign()}>批量删除</Button>
                         }
                         {
-                            hasAuth(`${pageCommonAuthPrefix}_resignationList`) &&
+                            // hasAuth(`${pageCommonAuthPrefix}_resignationList`) &&
                             <Button type='default' style={{marginRight: 10}} onClick={e => this.setCurrentFrame('leaveListFrame')}>离任名单</Button>
                         }
                     </NHTable>
@@ -249,26 +349,31 @@ class Index extends React.Component {
                     description={['正确的数据会先被导入，错误数据将在完成后提供下载']}
                 />
 
-                <Modal title={'新增'} visible={addOrUpdateModal} confirmLoading={confirmLoading} centered destroyOnClose
-                        onOk={this.add}
-                        onCancel={this.backInitialPageState}>
+                <Modal title={Object.keys(record).length !== 0 ? '修改' : '新增'}
+                       visible={addOrUpdateModal}
+                       confirmLoading={confirmLoading}
+                       centered
+                       destroyOnClose
+                       onOk={this.add}
+                       onCancel={this.backInitialPageState}>
                     <AddForm ref={ref => this.addOrUpdateRef = ref} pageBaseUrl={pageBaseUrl} editData={this.lowerize(record)}
                              isEdit={Object.keys(record).length !== 0}/>
                 </Modal>
 
                 <NHContainerFrame title={`学生名单`} visible={studentListFrame}
-                                    onOk={null}
-                                    onCancel={this.backInitialPageState}>
+                                  onOk={null}
+                                  onCancel={this.backInitialPageState}>
                     <StudentList pageBaseUrl={pageBaseUrl} tutor={this.lowerize(record)}/>
                 </NHContainerFrame>
 
                 <NHContainerFrame title={`离任名单`} visible={leaveListFrame}
-                                    onOk={null}
-                                    onCancel={this.backInitialPageState}>
+                                  onOk={null}
+                                  onCancel={this.backInitialPageState}>
                     <LeaveList pageBaseUrl={pageBaseUrl}/>
                 </NHContainerFrame>
 
-                <NHContainerFrame title={`修改`} visible={addOrUpdateFrame}
+                <NHContainerFrame title={Object.keys(record).length !== 0 ? '修改' : '新增'}
+                                  visible={addOrUpdateFrame}
                                   onOk={this.addOrUpdate}
                                   onCancel={this.backInitialPageState}>
                     <AddForm ref={ref => this.addOrUpdateRef = ref} pageBaseUrl={pageBaseUrl} editData={this.lowerize(record)}

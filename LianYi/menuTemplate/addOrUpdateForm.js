@@ -77,7 +77,6 @@ class EditInitForm extends React.Component {
                                        }}/>
                     </div>
 
-
                     <div style={{display: 'none'}}>
                         <NHFormItem {...this.initProps('pkid', '主键', false)}><Input readOnly/></NHFormItem>
                         <NHFormItem {...this.initProps('jsid', '教师id')}><Input readOnly/></NHFormItem>
